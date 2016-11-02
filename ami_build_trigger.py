@@ -13,9 +13,7 @@ imagesDict = ec2.describe_images(
 	Filters=[
 		{ 
 			'Name' : 'name',
-			'Values' : [
-				'*amazon-ecs-optimized'
-			]
+			'Values' : [ '*amazon-ecs-optimized' ]
 		},
 		{
 			'Name' : 'state',
