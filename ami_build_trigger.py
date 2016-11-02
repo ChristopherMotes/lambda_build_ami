@@ -1,5 +1,9 @@
 import boto3
+import time
 
+DATEYMD = time.strftime("%Y-%m-%d")
+#DATEYMD = '2016-08-08'
+print DATEYMD
 session = boto3.Session(profile_name='shaeking1')
 ec2 = session.client('ec2')
 imagesDict = ec2.describe_images(
@@ -13,10 +17,17 @@ imagesDict = ec2.describe_images(
 				'*amazon-ecs-optimized'
 			]
 		},
+		{
+			'Name' : 'state',
+			'Values' : [
+				'pending',
+				'available'
+			]
+		}
 	]
 )
-
  
-for printer in imagesDict:
-	print printer
+for images in imagesDict['Images'] :
+	if DATEYMD in images['CreationDate']:
+		print images['ImageId']
 
