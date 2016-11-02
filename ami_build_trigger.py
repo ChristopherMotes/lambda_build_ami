@@ -23,6 +23,10 @@ imagesDict = ec2.describe_images(
 				'pending',
 				'available'
 			]
+		},
+		{
+			'Name' : 'image-type',
+			'Values' : [ 'machine' ]
 		}
 	]
 )
