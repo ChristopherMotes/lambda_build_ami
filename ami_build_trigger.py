@@ -1,4 +1,22 @@
 import boto3
 
-ec2 = boto3.resource('ec2')
-image = ec2.Image('id')
+session = boto3.Session(profile_name='shaeking1')
+ec2 = session.client('ec2')
+imagesDict = ec2.describe_images(
+	Owners=[
+		'amazon',
+	],
+	Filters=[
+		{ 
+			'Name' : 'name',
+			'Values' : [
+				'*amazon-ecs-optimized'
+			]
+		},
+	]
+)
+
+ 
+for printer in imagesDict:
+	print printer
+
