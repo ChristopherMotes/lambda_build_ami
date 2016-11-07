@@ -21,7 +21,7 @@ instanceDict = ec2.run_instances(
 			'AssociatePublicIpAddress': True,
 		}
 	],
-	IamInstanceProfile={ 'Arn': 'arn:aws:iam::742758411692:instance-profile/new-test-role', },
+	IamInstanceProfile={ 'Arn': 'arn:aws:iam::742758411692:instance-profile/ami-auto-create', },
 )
 	
 for instance in instanceDict['Instances']:
