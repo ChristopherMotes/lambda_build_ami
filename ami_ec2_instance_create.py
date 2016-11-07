@@ -32,7 +32,6 @@ response = ec2.create_tags(
 	Resources=[ instanceID, ] ,
 	Tags=[
 		{ 'Key' : 'Name', 'Value' : TAG_Name },
-		{ 'Key' : 'VPC', 'Value': TAG_VPC }
 	]
 )
 
