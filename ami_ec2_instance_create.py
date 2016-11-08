@@ -27,10 +27,11 @@ instanceDict = ec2.run_instances(
 	
 for instance in instanceDict['Instances']:
 	instanceID =  instance['InstanceId']
+Event_Pattern_string="{\"source\":[\"aws.ec2\"],\"detail-type\":[\"EC2 Instance State-change Notification\"],\"detail\":{\"state\":[\"stopped\"],\"instance-id\":[ \"%s\" ]}}" % instanceID
 events=session.client('events')
 response = events.put_rule(
 	Name='ami-auto-build',
-	EventPattern="{\"source\":[\"aws.ec2\"],\"detail-type\":[\"EC2 Instance State-change Notification\"],\"detail\":{\"state\":[\"stopped\"],\"instance-id\":[\"instanceID\"]}}",
+	EventPattern=Event_Pattern_string,
 	State='ENABLED',
 	Description='Build AMI when triggered'
 )
