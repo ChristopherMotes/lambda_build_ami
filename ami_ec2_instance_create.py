@@ -27,6 +27,9 @@ instanceDict = ec2.run_instances(
 	
 for instance in instanceDict['Instances']:
 	instanceID =  instance['InstanceId']
+events=Session.boto3.client('events')
+response = events.put_rule(
+	Name='ami-auto-build',
 
 ec2 = session.resource('ec2')
 response = ec2.create_tags( 
