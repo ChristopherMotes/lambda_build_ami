@@ -35,7 +35,15 @@ def lambda_handler(event, context):
         State='ENABLED',
         Description='Build AMI when triggered'
     )
-   
+    response = events.put_targets(
+        Rule='ami-auto-build',
+        Targets=[
+            {
+                'Id': '1',
+                'Arn': 'arn:aws:lambda:us-east-1:742758411692:function:ami_image_create'
+            },
+        ]
+    )
     ec2 = boto3.resource('ec2')
     response = ec2.create_tags(
         Resources=[ instanceID, ] ,
@@ -45,4 +53,4 @@ def lambda_handler(event, context):
         ]
     )
 
-    return 'Image Funtion Complete'
+    return 'Image Built'
