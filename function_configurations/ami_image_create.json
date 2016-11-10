@@ -1,0 +1,18 @@
+{
+    "CodeSha256": "VjdXidA20TPehoU+Qt7qbzC1Xo/H0WzYywDx00/rPis=", 
+    "FunctionName": "ami_image_create", 
+    "VpcConfig": {
+        "SubnetIds": [], 
+        "SecurityGroupIds": []
+    }, 
+    "MemorySize": 128, 
+    "FunctionArn": "arn:aws:lambda:us-east-1:742758411692:function:ami_image_create", 
+    "Version": "$LATEST", 
+    "Role": "arn:aws:iam::742758411692:role/ami_build_trigger", 
+    "Timeout": 30, 
+    "LastModified": "2016-11-09T23:22:17.237+0000", 
+    "Handler": "lambda_function.lambda_handler", 
+    "Runtime": "python2.7", 
+    "CodeSize": 472, 
+    "Description": "Creates and AMI from the targeted build"
+}
