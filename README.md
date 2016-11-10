@@ -5,7 +5,7 @@ Leverages aws: cloud watch event, lambda scheduler, lambda and user data to prod
 A brief description of each of the scripts required to make the process work. The scripts are uncommented in line. I hope to cover  for the bulk of that here.
 
 ## user_data.sh
-The user_data script is more of a data store. It should hold anything done on the system during customiztation.
+The user_data script is more of a data store. It should hold anything done on the system during customiztation. It must end with init 0 or another shutdown command.
 
 ## ami_build_trigger.py
 Add this function to the lambda scheduler. Run it daily. If it sees a new verion on the describe image, ami_build_trigger, triggers the build of the AMI.
@@ -52,11 +52,27 @@ This builds the ec2 instance and adds the cloudwatch event (see notes for this s
 ### Put Rule and Put Targets
 You have to put a rule then a target. The rule ami-auto-build waits for the instance to goto a stopped state. The target calls the last lambda function (See Notes for this section)
 
+```    
+    Event_Pattern_string="{\"source\":[\"aws.ec2\"],\"detail-type\":[\"EC2 Instance State-change Notification\"],\"detail\":{\"state\":[\"stopped\"],\"instance-id\":[ \"%s\" ]}}" % instanceID
+```
+If you're a python people, the above is fairly self evident. I'm setting the instance ID we just created in the cloudwatch event rule. So, we're only looking for an action on this one instance.
+```
+    events=boto3.client('events')
+    response = events.put_rule(
+        Name='ami-auto-build',
+        EventPattern=Event_Pattern_string,
+<SNIP>
+    response = events.put_targets(
+        Rule='ami-auto-build',
+```
+Read aws and boto3 documentation for questions on put_rule and put_targets.
+
 ### Tagging
 The last section just adds tags to the instance. Use tags!
 
 ### Notes
 1. I had very good reason for creating an event instead of invoking the ami_image_create lambda function from the user data. I can't figure it out now, but it was real and it was spactacular. 
+2. The Id of '1' in the targets was infuriating. I tried several ids and the target would add, but it wouldn't invoke.
 
 ## ami_image_create.py
 This script is the last lambda function. We take our image we built and turn it into an AMI. Then we delete the now, unneeded, cloudwatch events.
