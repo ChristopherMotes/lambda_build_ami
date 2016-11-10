@@ -13,7 +13,21 @@ Add this function to the lambda scheduler. Run it daily. If it sees a new verion
     #DATEYMD = '2016-08-08'
 ```
 The first variable should exit when the script is running from the scheduler. The second should be a know good time for your uncustomized AMI, uncomment when testing
-
+### Choosing the AMI
+```
+    	Filters=[
+    		{ 
+    			'Name' : 'name',
+    			'Values' : [ '*amazon-ecs-optimized' ]
+```
+The values line in the filter section is a glob match of the AMI provided by the vendor. In the case it's the Amazon ECS Optimized image.
+### Invocation
+```
+        invokeResponse = lambda_client.invoke(
+            FunctionName='ami_ec2_instance_create',
+```
+The last section is the bulk of core of the function. After we match the image we send this to another quietly waiting lambda function to start the build process.
+##
 ## Directories
 ### policies
 The custom prolicies added to roles used to create each required piece of the AMI.
