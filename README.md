@@ -36,6 +36,7 @@ The last section is the bulk of core of the function. After we match the image w
 ### Notes
 1. This takes a long time run in lambda terms, 15-30 seconds. Plan your spending accordingly.
 2. Runing the script daily, keeps the date comparison brief. If I change this, it will be a monthly run.
+3. lambda means something to python. So all of my boto3 lambda clients are named lambda_client and not just lambda. And absolutely not the non-self documenting client that the boto3 docs use.
 
 ## ami_ec2_instance_create.py
 This builds the ec2 instance and adds the cloudwatch event (see notes for this section).
@@ -55,9 +56,32 @@ You have to put a rule then a target. The rule ami-auto-build waits for the inst
 The last section just adds tags to the instance. Use tags!
 
 ### Notes
-1. I had very good reason for creating an event instead of invoking the ami_create lambda function from the user data. I can't figure it out now, but it was real and it was spactacular. 
+1. I had very good reason for creating an event instead of invoking the ami_image_create lambda function from the user data. I can't figure it out now, but it was real and it was spactacular. 
 
+## ami_image_create.py
+This script is the last lambda function. We take our image we built and turn it into an AMI. Then we delete the now, unneeded, cloudwatch events.
+### Variables
+`instanceID=event['detail']['instance-id']` Lookie, deep hashing on a lambda thingie
 
+### Create Image
+```
+    Name_string = "test-ami-%s" % DATEYMD
+    response = ec2.create_image(
+        InstanceId=instanceID,
+        Name=Name_string,
+```
+Create image is fairly straight forward read aws and boto3 documentation for questions
+
+### Remove Tagets and rule
+```
+    events = boto3.client('events')
+    response = events.remove_targets(
+<snip>
+    response = events.delete_rule(
+```
+Here we clean up the cloud watch events. Since we add them automagically when we needd them, there's no reason to leave them hanging around.
+
+### 
 ## Directories
 ### policies
 The custom prolicies added to roles used to create each required piece of the AMI. Also, you'll need to apply EC2 Read Only. Let you security and configuration management requirements deterime how your roles layout.
