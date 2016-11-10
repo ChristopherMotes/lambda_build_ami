@@ -30,9 +30,9 @@ The last section is the bulk of core of the function. After we match the image w
 ##
 ## Directories
 ### policies
-The custom prolicies added to roles used to create each required piece of the AMI.
+The custom prolicies added to roles used to create each required piece of the AMI. Also, you'll need to apply EC2 Read Only. Let you security and configuration management requirements deterime how your roles layout.
 ### function_configurations
-The output from aws lambda get-function-configuration for each of the functions
+The output from aws lambda get-function-configuration for each of the functions. Use these to help  build your functions correctly.
 
 ## Improvements
 1. complex user_data stored in S3.
